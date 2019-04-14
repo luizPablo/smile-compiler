@@ -31,11 +31,13 @@ generateGrammarSource {
 }
 
 compileJava.dependsOn generateGrammarSource
+
 sourceSets {
     generated {
         java.srcDir 'generated-src/antlr/main/'
     }
 }
+
 compileJava.source sourceSets.generated.java, sourceSets.main.java
  
 clean{

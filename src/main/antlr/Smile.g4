@@ -1,24 +1,34 @@
 grammar Smile;
 
-actorStatement : actorDeclaration NL
+actorStatement : actorDeclaration NL+
                  (associationDeclaration)*
-                 NL
                  externalRelationships
+                 internalRelationships
                  EOF;
 
 actorDeclaration : actorType actorName (',')? ;
 actorType : ACTOR | AGENT | POSITION | ROLE ;
-actorName : ID ;
+actorName : ID;
 
-associationDeclaration : associationType '(' (actorDeclaration)+ ')' NL? ;
+associationDeclaration : associationType '(' (actorDeclaration)+ ')' NL* ;
 associationType : COVERS | ISA | INSTANCEOF | ISPARTOF | OCCUPIES | PLAYS ;
 
-externalRelationships : 'ExternalRelationships' NL
+externalRelationships : 'ExternalRelationships' NL+
 					    (dependerPerspective)*
 					    (dependeePerspective)* ;
 
-dependerPerspective : dependencyDependerPerspective dependerDependencyDeclaration NL? ;
-dependeePerspective : dependencyDependeePerspective dependeeDependencyDeclaration NL? ;
+internalRelationships : 'InternalRelationships' NL+
+                        (internalRelationshipsStatement)* ;
+
+internalRelationshipsStatement : dependencyType dependencyName ('{' NL*
+                                 (intencionalElementList)*
+                                 (dependerPerspective)*
+                                 (dependeePerspective)* '}')? NL* ;
+
+intencionalElementList : internalRelationType '(' dependencyType dependencyName (',' dependencyType dependencyName)* ')' NL*;
+
+dependerPerspective : dependencyDependerPerspective dependerDependencyDeclaration NL* ;
+dependeePerspective : dependencyDependeePerspective dependeeDependencyDeclaration NL* ;
 
 dependerDependencyDeclaration : '(' actorDeclaration ')' 'for' '(' dependencyType dependencyName ')' ;
 dependeeDependencyDeclaration : '(' dependencyType dependencyName ')' 'to' '(' actorDeclaration ')';
@@ -27,6 +37,9 @@ dependencyDependerPerspective : DEPENDSON ;
 dependencyDependeePerspective : CARRIESOUT | PROVIDES | REACHES ;
 dependencyType : GOAL | RESOURCE | SOFTGOAL | TASK ;
 dependencyName : ID ;
+
+contributionType : SOMEP | SOMEM ;
+internalRelationType : DECOMPOSITION | (contributionType)? CONTRIBUTION | MEANSEND ;
 
 // Actor types
 ACTOR 	 : 'actor';
@@ -53,6 +66,15 @@ CARRIESOUT  : 'carriesOut' ;
 DEPENDSON 	: 'dependsOn' ;
 PROVIDES 	: 'provides' ;
 REACHES 	: 'reaches' ;
+
+// Internal relationships types
+DECOMPOSITION   : 'decomposition' ;
+CONTRIBUTION    : 'contribution' ;
+MEANSEND        : 'means-end' ;
+
+// Contribution types
+SOMEP : 'some+' ;
+SOMEM : 'some-' ;
 
 ID : [a-zA-Z]+ ;
 WS : [ \t]+ -> skip ;

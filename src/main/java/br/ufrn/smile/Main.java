@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
-		SmileCompiler compiler = new SmileCompiler("path/to/your/smile/files");
+		SmileCompiler compiler = new SmileCompiler("/Volumes/Macintosh HD/Projects/UFRN/Smile/smile-compiler/src/main/resources");
 		
 		compiler.setConfiguration(3, 2, 2);
 		

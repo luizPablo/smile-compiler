@@ -1,0 +1,26 @@
+actor Paciente
+
+ExternalRelationships
+    dependsOn (agent PlanoDeSaude) for (goal cobrirDoencas)
+    dependsOn (agent Medico) for (goal doencaTratada)
+
+    provides (resource pagamentoMensalidade) to (agent PlanoDeSaude)
+    carriesOut (task tomarMedicacao) to (agent Medico)
+
+InternalRelationships
+    task ficarBemPorTerPS {
+        decomposition (task comprarPS, task receberTratamento)
+        some+ contribution (goal estarBem)
+    }
+
+    goal estarBem
+
+    task comprarPS {
+        reaches (goal cobrirDoencas) to (agent PlanoDeSaude)
+        provides (resource pagamentoMensalidade) to (agent PlanoDeSaude)
+    }
+
+    task receberTratamento {
+        reaches (goal doencaTratada) to (agent Medico)
+        carriesOut (task tomarMedicacao) to (agent Medico)
+    }

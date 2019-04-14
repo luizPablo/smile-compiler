@@ -1,0 +1,36 @@
+agent Medico
+    occupies (position Diretor)
+
+ExternalRelationships
+    dependsOn (actor Paciente) for (task tomarMedicacao)
+    dependsOn (agent PlanoDeSaude) for (resource preAprovacaoTratamento)
+
+    reaches (goal doencaTratada) to (actor Paciente)
+    provides (resource tratamentoGratuito) to (agent PlanoDeSaude)
+
+InternalRelationships
+    task tratamentoPaciente {
+        decomposition (task diagnosticarDoencas, task tratarDoencas, task emitirContasPagar)
+        some+ contribution (goal pacienteCurado)
+    }
+
+    task diagnosticarDoencas {
+        reaches (goal doencaTratada) to (actor Paciente)
+    }
+
+    task tratarDoencas {
+        carriesOut (task tomarMedicacao) to (actor Paciente)
+        provides (resource preAprovacaoTratamento) to (agent PlanoDeSaude)
+    }
+
+    task emitirContasPagar {
+        provides (resource tratamentoGratuito) to (agent PlanoDeSaude)
+    }
+
+    goal pacienteCurado
+
+    softgoal praticaViavel
+
+    task realizarPraticaMedicina {
+        decomposition (goal pacienteCurado, softgoal praticaViavel)
+    }

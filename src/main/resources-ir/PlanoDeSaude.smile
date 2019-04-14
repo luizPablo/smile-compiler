@@ -1,0 +1,10 @@
+agent PlanoDeSaude
+
+ExternalRelationships
+    dependsOn (actor Paciente) for (resource pagamentoMensalidade)
+    dependsOn (agent Medico) for (resource tratamentoGratuito)
+
+    reaches (goal cobrirDoencas) to (actor Paciente)
+    provides (resource preAprovacaoTratamento) to (agent Medico)
+
+InternalRelationships
